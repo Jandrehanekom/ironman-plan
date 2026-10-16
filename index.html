@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Road to IRONMAN: training plan</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#13222F">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IRONMAN plan">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EEF1; --surface:#FFFFFF; --sunk:#F3F6F8; --ink:#13222F; --muted:#56687A; --line:#CBD5DD;
+  --swim:#0A7C93; --bike:#A9690A; --run:#C0364C; --gym:#4B4CA6; --test:#1E7A50; --race:#13222F; --rest:#8796A3;
+  --focus:#0A7C93;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E161D; --surface:#16212B; --sunk:#111B23; --ink:#E4ECF2; --muted:#94A6B6; --line:#2A3B4A;
+    --swim:#3DB8CF; --bike:#E2A646; --run:#F0687D; --gym:#9A9BF0; --test:#4CC38A; --race:#E4ECF2; --rest:#6F8292;
+    --focus:#3DB8CF; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E161D; --surface:#16212B; --sunk:#111B23; --ink:#E4ECF2; --muted:#94A6B6; --line:#2A3B4A;
+  --swim:#3DB8CF; --bike:#E2A646; --run:#F0687D; --gym:#9A9BF0; --test:#4CC38A; --race:#E4ECF2; --rest:#6F8292;
+  --focus:#3DB8CF; color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+h1,h2,h3,h4,.cond{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+h1{font-size:clamp(44px,8vw,84px);line-height:.92;font-weight:700;margin:0;letter-spacing:-.01em}
+.lede{margin:12px 0 0;color:var(--muted);max-width:60ch;font-size:17px}
+.lede b{color:var(--ink);font-weight:600}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+
+/* season profile */
+.profile{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px 12px}
+.profile-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.profile-head h2{margin:0;font-size:22px;font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.bars{display:grid;grid-template-columns:repeat(26,minmax(0,1fr));gap:3px;align-items:end;height:150px;padding-top:6px}
+.bar{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;border:0;background:none;padding:0;cursor:pointer;border-radius:4px}
+.bar .stack{display:flex;flex-direction:column-reverse;border-radius:3px 3px 0 0;overflow:hidden}
+.bar .seg{display:block;width:100%}
+.bar.sel{background:var(--sunk);box-shadow:inset 0 0 0 2px var(--ink)}
+.bar.now::after{content:"";position:absolute;left:50%;bottom:-9px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--run)}
+.bar.done .stack{opacity:.45}
+.wkno{display:grid;grid-template-columns:repeat(26,minmax(0,1fr));gap:3px;margin-top:12px;font-family:"Barlow Condensed",sans-serif;font-size:12px;color:var(--muted);text-align:center}
+.phases{display:grid;grid-template-columns:repeat(26,minmax(0,1fr));gap:3px;margin-top:6px}
+.ph{font-size:12px;color:var(--muted);border-top:2px solid var(--line);padding-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-foot{margin-top:10px;font-size:13px;color:var(--muted)}
+
+/* numbers */
+details.numbers{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+details.numbers>summary{cursor:pointer;list-style:none;padding:14px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:4px 12px;flex-wrap:wrap}
+details.numbers>summary::-webkit-details-marker{display:none}
+details.numbers>summary h2{margin:0;font-size:22px;font-weight:600}
+.sumhint{color:var(--muted);font-size:14px}
+.numgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:4px 16px 16px}
+.field label{display:block;font-size:14px;font-weight:600}
+.field small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35;margin-top:2px}
+.field input{margin-top:6px;width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}
+.field input:invalid{border-color:var(--run)}
+.savestate{padding:0 16px 14px;font-size:13px;color:var(--muted)}
+.backup{padding:0 16px 4px;display:flex;flex-wrap:wrap;gap:8px}
+.backup button{border:1px solid var(--line);background:var(--sunk);border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:600}
+.backup .savestate{flex-basis:100%;padding:4px 0 10px}
+
+/* week */
+.weekbar{margin-top:30px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.weekbar h2{margin:0;font-size:clamp(34px,5vw,48px);font-weight:700;line-height:1}
+.weekmeta{margin-top:6px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.phase-tag{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;padding:2px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+.nav{display:flex;gap:8px}
+.nav button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+.nav button:disabled{opacity:.4;cursor:default}
+.totals{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tot{display:flex;flex-direction:column}
+.tot b{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:600;line-height:1.1}
+.tot span{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.weeknote{margin:14px 0 0;color:var(--muted);max-width:75ch}
+
+.days{margin-top:8px}
+.day{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.dayname{font-family:"Barlow Condensed",sans-serif}
+.dayname b{display:block;font-size:22px;font-weight:600;line-height:1.1}
+.dayname span{color:var(--muted);font-size:15px}
+.sessions{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.s{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:10px;padding:12px 14px 12px 12px}
+.s.optional{border-style:dashed;border-left-style:solid}
+.s.isdone{opacity:.6}
+.s.ismissed{opacity:.65;background:var(--sunk)}
+.s.ismissed h4{text-decoration:line-through;text-decoration-thickness:2px}
+.s-top{display:flex;gap:10px;align-items:flex-start}
+.marks{display:flex;flex-direction:column;gap:4px;flex:none}
+.mk{width:30px;height:30px;border:1.5px solid var(--line);border-radius:7px;background:var(--surface);cursor:pointer;display:grid;place-items:center;padding:0;color:var(--muted)}
+.mk svg{width:16px;height:16px}
+.mk.on.done{background:var(--c);border-color:var(--c);color:var(--surface)}
+.mk.on.miss{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.status{margin:6px 0 0;font-size:13px;font-weight:600;color:var(--muted)}
+.logline{margin:10px 0 0;font-size:14.5px;color:var(--muted)}
+.bar .seg.missed{background-image:repeating-linear-gradient(135deg,transparent 0 3px,var(--surface) 3px 6px)}
+.sw.missed{background-color:var(--muted);background-image:repeating-linear-gradient(135deg,transparent 0 2px,var(--surface) 2px 4px)}
+.s-title{flex:1;min-width:0}
+.s-kind{font-size:13px;font-weight:600;color:var(--c)}
+.s-title h4{margin:0;font-size:20px;font-weight:600;line-height:1.15}
+.s-dur{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:600;white-space:nowrap}
+.target{margin:8px 0 0;font-size:14.5px;font-weight:500;background:var(--sunk);border-radius:6px;padding:6px 8px}
+ol.steps{margin:8px 0 0;padding-left:20px;font-size:15px}
+ol.steps li{margin:2px 0}
+.lifts{width:100%;border-collapse:collapse;margin-top:8px;font-size:15px}
+.lifts td{padding:5px 4px;border-top:1px solid var(--line);vertical-align:top}
+.lifts td.n{width:46%}
+.lifts td.k{text-align:right;font-weight:600;white-space:nowrap}
+.lifts td.p{text-align:right;color:var(--muted);font-size:13px;white-space:nowrap;width:1%}
+.note{margin:8px 0 0;font-size:13.5px;color:var(--muted)}
+.src{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
+.opt{font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 7px;margin-left:6px;vertical-align:2px}
+
+/* reference */
+.ref{margin-top:40px}
+.ref h2{font-size:30px;margin:0 0 6px;font-weight:700}
+.ref h3{font-size:21px;margin:26px 0 6px;font-weight:600}
+.ref p{max-width:75ch;margin:6px 0}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.z{border-collapse:collapse;min-width:520px;font-size:15px;margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.z th,table.z td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
+table.z th{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:600;background:var(--sunk)}
+ol.refs{padding-left:22px;max-width:80ch}
+ol.refs li{margin:6px 0}
+ol.refs a{color:var(--swim)}
+.foot{margin-top:30px;font-size:13px;color:var(--muted);max-width:75ch}
+
+@media (max-width:640px){
+  .wrap{padding:18px 14px 48px}
+  .day{grid-template-columns:1fr;gap:8px}
+  .dayname{display:flex;gap:8px;align-items:baseline}
+  .sessions{grid-template-columns:1fr}
+  .bars{height:120px;gap:2px}
+  .wkno,.phases{gap:2px}
+  .wkno span:nth-child(even){visibility:hidden}
+}
+@media (prefers-reduced-motion:no-preference){ .bar .stack{transition:opacity .2s} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Road to IRONMAN</h1>
+    <p class="lede" id="lede">Swim 3.8 km, bike 180 km, run 42.2 km. Race day is <b>Sunday 18 April 2027</b>.</p>
+  </header>
+
+  <section class="profile" aria-label="Season overview">
+    <div class="profile-head">
+      <h2>Season at a glance</h2>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--swim)"></i>Swim</span>
+        <span><i class="sw" style="background:var(--bike)"></i>Bike</span>
+        <span><i class="sw" style="background:var(--run)"></i>Run</span>
+        <span><i class="sw" style="background:var(--gym)"></i>Gym</span>
+        <span><i class="sw missed"></i>Missed</span>
+      </div>
+    </div>
+    <div class="bars" id="bars" role="listbox" aria-label="Choose a week"></div>
+    <div class="wkno" id="wkno" aria-hidden="true"></div>
+    <div class="phases" id="phases" aria-hidden="true"></div>
+    <p class="profile-foot">Bar height is planned training hours. Striped parts are sessions you marked missed, and a week fades once every session is marked done or missed. Tap a week to open it. The dot marks the current week once training starts on 19 October.</p>
+  </section>
+
+  <details class="numbers" id="numbers">
+    <summary><h2>Your numbers</h2><span class="sumhint">Update after each test and the plan recalculates</span></summary>
+    <div class="numgrid">
+      <div class="field"><label for="inBench">Bench 1RM (kg)</label><small>Retest in weeks 2, 14 and 22</small><input id="inBench" type="number" inputmode="decimal" min="20" max="400" step="0.5"></div>
+      <div class="field"><label for="inSquat">Squat 1RM (kg)</label><small>Retest in weeks 2 and 14</small><input id="inSquat" type="number" inputmode="decimal" min="20" max="500" step="0.5"></div>
+      <div class="field"><label for="inDead">Deadlift 1RM (kg)</label><small>Retest in weeks 2 and 14</small><input id="inDead" type="number" inputmode="decimal" min="20" max="500" step="0.5"></div>
+      <div class="field"><label for="in5k">5K time (mm:ss)</label><small>Sets every run pace. Update after Saturday 24 Oct</small><input id="in5k" type="text" inputmode="numeric" pattern="\d{1,2}:[0-5]\d" placeholder="25:00"></div>
+      <div class="field"><label for="inLR">Run LTHR (bpm)</label><small>From the week 3 run test</small><input id="inLR" type="number" inputmode="numeric" min="100" max="220" placeholder="Not tested"></div>
+      <div class="field"><label for="inLB">Bike LTHR (bpm)</label><small>From the week 7 bike test</small><input id="inLB" type="number" inputmode="numeric" min="100" max="220" placeholder="Not tested"></div>
+      <div class="field"><label for="inCSS">Swim CSS (mm:ss per 100 m)</label><small>From the week 5 swim test</small><input id="inCSS" type="text" inputmode="numeric" pattern="\d{1,2}:[0-5]\d" placeholder="Not tested"></div>
+    </div>
+    <p class="savestate" id="savestate">Changes are saved on this device.</p>
+    <div class="backup">
+      <button type="button" id="btnBackup">Save a backup file</button>
+      <button type="button" id="btnRestore">Restore from backup</button>
+      <input type="file" id="fileRestore" accept="application/json,.json" hidden>
+      <p class="savestate" id="backupMsg">Your numbers and ticks live in this phone’s browser storage. Save a backup now and then, especially before changing phones.</p>
+    </div>
+  </details>
+
+  <section aria-live="polite">
+    <div class="weekbar">
+      <div>
+        <h2 id="wkTitle">Week 1</h2>
+        <div class="weekmeta"><span id="wkDates"></span><span class="phase-tag" id="wkPhase"></span></div>
+      </div>
+      <div class="nav"><button id="prev" type="button">Previous week</button><button id="next" type="button">Next week</button></div>
+    </div>
+    <div class="totals" id="totals"></div>
+    <p class="logline" id="logline"></p>
+    <p class="weeknote" id="weeknote"></p>
+    <div class="days" id="days"></div>
+  </section>
+
+  <section class="ref" id="ref">
+    <h2>How this plan works</h2>
+    <h3>Your run paces</h3>
+    <p id="vdotLine"></p>
+    <div class="tablewrap"><table class="z" id="runZones"></table></div>
+    <h3>Bike and run heart-rate zones</h3>
+    <p>Zones follow Joe Friel’s percentages of lactate threshold heart rate (LTHR), found with a 30-minute solo time trial: your LTHR is the average heart rate over the last 20 minutes. Until you test, the plan describes effort in words.</p>
+    <div class="tablewrap"><table class="z" id="hrZones"></table></div>
+    <h3>Swim paces</h3>
+    <p>Critical swim speed (CSS) per 100 m = (400 m time − 200 m time) ÷ 2. Aerobic swimming is CSS plus 8–15 seconds per 100 m; threshold repeats of 100–200 m are CSS plus 1–2 seconds. If you can’t yet swim 100 m without stopping, swim 25s or 50s with rest and still count the distance.</p>
+    <p id="swimLine"></p>
+    <h3>How the season is built</h3>
+    <p>Most training is easy. Each sport has one harder session a week at most, following research showing well-trained endurance athletes do roughly 80% of their training at low intensity. Every fourth week is a recovery week (weeks 6, 10, 14, 18 and 22), which is standard coaching practice rather than a single study’s finding. Weekly load rises gradually from your recent 3–4 hours, in line with Gabbett’s guidance to keep this week’s load within about 0.8–1.3 times your recent four-week average. The final two weeks cut volume sharply while keeping some intensity, the taper pattern a 2007 meta-analysis found most effective.</p>
+    <p>Strength: bench progresses all season. Squat and deadlift push for gains through January, then hold steady during the biggest endurance weeks, because combined training can hold back lower-body strength in trained lifters. Heavy leg sessions sit early in the week, away from the weekend long ride and long run. Friday is gym-only, your endurance rest day. No gym on Sundays.</p>
+    <p>The block and set structure, recovery-week placement and gym timing are coaching judgment. Adjust any session if you’re ill, injured or unusually tired, and get a medical check-up before the training load rises.</p>
+    <h3>References</h3>
+    <ol class="refs">
+      <li>Bosquet L, et al. Effects of tapering on performance: a meta-analysis. Med Sci Sports Exerc. 2007;39(8):1358–65. <a href="https://pubmed.ncbi.nlm.nih.gov/17762369/" target="_blank" rel="noopener">PubMed</a></li>
+      <li>Stöggl TL, Sperlich B. The training intensity distribution among well-trained and elite endurance athletes. Front Physiol. 2015;6:295. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4621419/" target="_blank" rel="noopener">PMC</a></li>
+      <li>Esteve-Lanao J, Foster C, Seiler S, Lucia A. Impact of training intensity distribution on performance in endurance athletes. J Strength Cond Res. 2007. <a href="https://abacus.universidadeuropea.com/entities/publication/7fbfa682-6302-499f-9a81-4e468521d082" target="_blank" rel="noopener">Abstract</a></li>
+      <li>Gabbett TJ. The training–injury prevention paradox. Br J Sports Med. 2016. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4789704" target="_blank" rel="noopener">PMC</a></li>
+      <li>Daniels J. Daniels’ Running Formula (pace intensities as % VO2max), and Daniels J, Gilbert J. Oxygen Power, 1979 (VDOT equations). <a href="https://www.coachray.nz/2023/05/03/jack-daniels-running-intensity/" target="_blank" rel="noopener">Summary of intensities</a></li>
+      <li>Friel J. Quick guide to setting zones (30-minute LTHR test). <a href="https://www.trainingpeaks.com/learn/articles/joe-friel-s-quick-guide-to-setting-zones/" target="_blank" rel="noopener">TrainingPeaks</a>; zone percentages: <a href="https://www.220triathlon.com/training/long-distance/going-long-training-zones" target="_blank" rel="noopener">220 Triathlon</a></li>
+      <li>CSS test and formula. <a href="https://support.myprocoach.net/hc/en-us/articles/360040593392-How-Does-The-CSS-Swim-Test-Work" target="_blank" rel="noopener">MyProCoach</a>; CSS training offsets: <a href="https://www.athletedata.health/guides/critical-swim-speed" target="_blank" rel="noopener">AthleteData</a></li>
+      <li>Schumann M, et al. Compatibility of concurrent aerobic and strength training for skeletal muscle size and function. Sports Med. 2022;52:601–612. <a href="https://sci-sport.com/en/concurrent-training-does-cardio-affect-muscle-mass-and-strength-gains-233/" target="_blank" rel="noopener">Summary</a></li>
+      <li>Petré H, et al. Development of maximal dynamic strength during concurrent resistance and endurance training. Sports Med. 2021. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8053170" target="_blank" rel="noopener">PMC</a></li>
+      <li>IRONMAN cutoff times explained. <a href="https://thetriathlete.co.uk/ironman-swim-cut-off-times-explained/" target="_blank" rel="noopener">The Triathlete</a>; weekly hours for Ironman: <a href="https://www.220triathlon.com/training/long-distance/ironman-how-many-hours-of-training-a-week-do-you-need/" target="_blank" rel="noopener">220 Triathlon</a></li>
+    </ol>
+    <p class="foot">Built from your Garmin history (Feb–Oct 2026) and your 12-week strength and running program. Swim times are estimates until you enter your CSS.</p>
+  </section>
+</div>
+<script>
+// ===== Plan engine (pure; no DOM) =====
+const START = new Date(2026, 9, 19);   // Mon 19 Oct 2026 = week 1
+const RACE  = new Date(2027, 3, 18);   // Sun 18 Apr 2027
+const BASE_RM = { bench:130, squat:152, deadlift:187 }; // from the 12-week program file (used for week 2 test openers)
+const REC = new Set([6,10,14,18,22]);
+
+function phaseOf(w){
+  if(w===1) return {id:'race5k', name:'5K race week'};
+  if(w===2) return {id:'test', name:'Strength test week'};
+  if(w<=6) return {id:'foundation', name:'Foundation'};
+  if(w<=14) return {id:'base', name:'Base'};
+  if(w<=22) return {id:'build', name:'Build'};
+  if(w<=24) return {id:'peak', name:'Peak'};
+  return {id:'taper', name:'Taper'};
+}
+
+// Per-week endurance volume. swim in metres; everything else minutes.
+// [swimA, swimB, swimC, bikeTue, offBikeRun, rideSat, brick, runThu, runSun]
+const P = {
+  3:[900,900,600,45,10,60,0,55,45],
+  4:[1000,1000,600,50,10,75,0,50,55],
+  5:[1400,1200,800,50,15,90,0,55,60],
+  6:[800,1000,0,40,0,60,0,40,45],
+  7:[1200,1400,800,60,15,105,0,60,65],
+  8:[1300,1600,900,60,15,120,0,60,70],
+  9:[1400,1800,1000,65,15,135,0,65,75],
+  10:[1000,1200,0,45,0,90,0,40,50],
+  11:[1500,2000,1000,70,0,150,15,65,80],
+  12:[1600,2200,1200,70,0,165,15,65,85],
+  13:[1600,2400,1200,75,0,180,20,70,90],
+  14:[1200,1600,0,50,0,120,10,40,60],
+  15:[1800,2600,1300,75,0,195,20,65,95],
+  16:[1900,2800,1400,75,0,210,20,70,100],
+  17:[2000,3000,1400,80,0,225,25,70,105],
+  18:[1400,1800,0,50,0,150,15,45,70],
+  19:[1800,3200,1400,80,0,240,30,70,105],
+  20:[1600,3400,1400,80,0,255,30,70,110],
+  21:[1600,3800,1200,80,0,270,30,70,110],
+  22:[1400,2000,0,50,0,150,15,45,75],
+  23:[1800,3000,1400,75,0,300,30,70,110],
+  24:[1600,2600,1200,70,0,240,30,60,90],
+  25:[1400,1500,1000,60,0,120,15,45,50]
+};
+
+// Strength: [sets, reps, %1RM]. sq/dl/bh = main lifts; bv = bench volume (Mon); bl = bench light paused (Wed); sl = squat light (Fri)
+const G = {
+  3:{sq:[4,6,70],dl:[3,5,70],bh:[4,6,70],bv:[3,8,65],bl:[3,5,65],sl:[3,5,60]},
+  4:{sq:[4,5,75],dl:[3,5,75],bh:[4,5,75],bv:[3,8,67.5],bl:[3,5,65],sl:[3,5,60]},
+  5:{sq:[4,4,80],dl:[3,4,80],bh:[4,4,80],bv:[3,8,70],bl:[3,4,67.5],sl:[3,4,62.5]},
+  6:{sq:[3,5,60],dl:[2,5,60],bh:[3,5,60],bv:[2,8,60],bl:[2,5,60],sl:[2,5,55]},
+  7:{sq:[4,5,77.5],dl:[3,5,77.5],bh:[4,5,77.5],bv:[3,8,67.5],bl:[3,5,67.5],sl:[3,5,62.5]},
+  8:{sq:[4,4,82.5],dl:[3,3,82.5],bh:[4,4,82.5],bv:[3,6,72.5],bl:[3,4,70],sl:[3,4,65]},
+  9:{sq:[4,3,85],dl:[3,3,85],bh:[4,3,85],bv:[3,6,75],bl:[3,3,72.5],sl:[3,3,65]},
+  10:{sq:[3,3,65],dl:[2,3,65],bh:[3,3,65],bv:[2,6,62.5],bl:[2,3,60],sl:[2,3,60]},
+  11:{sq:[4,4,82.5],dl:[3,3,85],bh:[4,4,82.5],bv:[3,6,72.5],bl:[3,4,70],sl:[3,4,65]},
+  12:{sq:[4,3,87.5],dl:[3,2,87.5],bh:[4,3,87.5],bv:[3,5,75],bl:[3,3,72.5],sl:[3,3,65]},
+  13:{sq:[3,2,90],dl:[2,2,90],bh:[3,2,90],bv:[3,5,75],bl:[3,3,72.5],sl:[3,3,65]},
+  14:{test:true},
+  15:{sq:[3,4,80],dl:[2,4,80],bh:[4,5,77.5],bv:[3,6,72.5],bl:[3,4,70],sl:[2,5,60]},
+  16:{sq:[3,3,82.5],dl:[2,3,82.5],bh:[4,4,82.5],bv:[3,6,72.5],bl:[3,4,70],sl:[2,4,60]},
+  17:{sq:[3,3,85],dl:[2,3,85],bh:[4,3,85],bv:[3,5,75],bl:[3,3,72.5],sl:[2,4,60]},
+  18:{sq:[2,3,65],dl:[2,3,65],bh:[3,3,65],bv:[2,6,62.5],bl:[2,3,60],sl:[2,3,55]},
+  19:{sq:[3,3,82.5],dl:[2,3,82.5],bh:[4,3,87.5],bv:[3,5,75],bl:[3,3,72.5],sl:[2,4,60]},
+  20:{sq:[3,3,85],dl:[2,3,85],bh:[3,2,90],bv:[3,5,77.5],bl:[3,3,72.5],sl:[2,4,60]},
+  21:{sq:[2,2,87.5],dl:[2,2,87.5],bh:[3,1,92.5],bv:[3,4,77.5],bl:[3,3,72.5],sl:[2,3,60]},
+  22:{sq:[2,3,65],dl:[2,3,65],benchTest:true,bv:[2,6,62.5],bl:[2,3,60],sl:null},
+  23:{sq:[2,3,80],dl:[2,3,80],bh:[3,3,82.5],bv:[2,6,70],bl:[2,3,70],sl:[2,3,60]},
+  24:{sq:[2,3,80],dl:[2,3,80],bh:[3,2,85],bv:[2,6,70],bl:[2,3,70],sl:[2,3,60]},
+  25:{sq:[2,3,70],dl:[2,2,70],bh:[3,3,75],bv:[2,5,65],bl:null,sl:null}
+};
+
+// ---------- formatting ----------
+function mmss(sec){ sec=Math.round(sec); const m=Math.floor(sec/60), s=sec%60; return m+':'+String(s).padStart(2,'0'); }
+function parseMMSS(str){ const m=String(str||'').trim().match(/^(\d{1,3}):([0-5]\d)$/); return m ? (+m[1]*60 + +m[2]) : null; }
+function r25(x){ return Math.round(x/2.5)*2.5; }
+function kgStr(x){ return (Number.isInteger(x)? String(x) : x.toFixed(1)) + ' kg'; }
+
+// ---------- Daniels & Gilbert (1979) VDOT ----------
+function vo2At(v){ return -4.60 + 0.182258*v + 0.000104*v*v; }           // v in m/min
+function fracAt(tmin){ return 0.8 + 0.1894393*Math.exp(-0.012778*tmin) + 0.2989558*Math.exp(-0.1932605*tmin); }
+function vdotFrom5k(sec){ const t=sec/60, v=5000/t; return vo2At(v)/fracAt(t); }
+function velAt(vo2){ const a=0.000104,b=0.182258,c=-4.60-vo2; return (-b+Math.sqrt(b*b-4*a*c))/(2*a); }
+function paceAt(vdot, pct){ return 60000/velAt(vdot*pct); }              // sec per km
+function runPaces(fiveKsec){
+  const vd = vdotFrom5k(fiveKsec);
+  const z = (lo,hi)=>[paceAt(vd,hi), paceAt(vd,lo)];           // [fast, slow]
+  return { vdot:vd, E:z(.65,.74), M:z(.75,.84), T:z(.83,.88), I:z(.95,1.0) };
+}
+
+// ===== Session builder (needs settings S) =====
+// S = { rm:{bench,squat,deadlift}, fiveK:sec, lthrRun, lthrBike, css:sec/100m }
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+function makeHelpers(S){
+  const rp = runPaces(S.fiveK);
+  const pr = a => mmss(a[0])+'–'+mmss(a[1])+'/km';
+  const runHR = z => {
+    const L=S.lthrRun; if(!L) return '';
+    if(z==='E') return 'HR under '+Math.round(L*0.89)+' bpm';
+    if(z==='M') return 'HR '+Math.round(L*0.90)+'–'+Math.round(L*0.94)+' bpm';
+    if(z==='T') return 'HR '+Math.round(L*0.95)+'–'+Math.round(L*1.02)+' bpm';
+    return '';
+  };
+  const run = z => { const p=pr(rp[z]); const h=runHR(z); return z+' pace '+p+(h?' ('+h+')':''); };
+  const BZ = { Z1:[0,.81,'very easy'], Z2:[.81,.89,'conversational'], Z3:[.90,.93,'steady and strong'], Z4:[.94,.99,'hard'], Z5:[1.0,1.02,'very hard'] };
+  const bike = z => {
+    const [lo,hi,feel]=BZ[z]; const L=S.lthrBike;
+    if(!L) return z+' ('+feel+')';
+    return z+' '+(lo? Math.round(L*lo)+'–' : 'under ')+Math.round(L*hi)+' bpm';
+  };
+  const swimAer = () => S.css ? 'CSS +8–15 s: '+mmss(S.css+8)+'–'+mmss(S.css+15)+'/100 m' : 'relaxed, smooth effort';
+  const swimThr = () => S.css ? 'CSS +1–2 s: '+mmss(S.css+1)+'–'+mmss(S.css+2)+'/100 m' : 'strong but controlled';
+  const swimMin = d => Math.max(15, Math.round((d/100)*(S.css? S.css+25 : 165)/60/5)*5);
+  const kg = (lift,pct) => r25(S.rm[lift]*pct/100);
+  const lift = (name,arr,liftKey,note) => arr ? {name, scheme:arr[0]+'×'+arr[1], kg:kgStr(kg(liftKey,arr[2])), pct:arr[2]+'%', note:note||''} : null;
+  const acc = (name,scheme) => ({name, scheme, kg:'', pct:''});
+  return {rp,run,bike,swimAer,swimThr,swimMin,kg,lift,acc};
+}
+
+function testRows(H, liftKey, base){
+  const B = base[liftKey];
+  const row=(label,pct,reps)=>({name:label, scheme:'×'+reps, kg:kgStr(r25(B*pct/100)), pct:pct+'%'});
+  return [
+    {name:'Empty bar', scheme:'×10', kg:'20 kg', pct:''},
+    row('Warm-up',40,5), row('Warm-up',60,3), row('Warm-up',75,2), row('Warm-up',85,1),
+    row('Attempt 1 (opener)',90,1), row('Attempt 2',100,1), row('Attempt 3 (new best)',102.5,1)
+  ];
+}
+
+function buildWeek(w, S){
+  const H = makeHelpers(S);
+  const d = DAYS.map(()=>[]);
+  const add = (i, s) => d[i].push(s);
+  const rec = REC.has(w);
+
+  if(w===1){
+    add(0,{sport:'gym',title:'Lower A: squat focus',dur:50,src:'From your 12-week program, week 12',lifts:[
+      {name:'Back squat',scheme:'2×3',kg:kgStr(r25(BASE_RM.squat*.6)),pct:'60%'},
+      H.acc('Romanian deadlift','3×8–10 @ RPE 7'),H.acc('Bulgarian split squat','3×10 per leg'),H.acc('Leg curl','3×12'),H.acc('Hanging leg raise or plank','3×12 or 45 s')]});
+    add(1,{sport:'gym',title:'Upper A: bench focus',dur:50,src:'From your 12-week program, week 12',lifts:[
+      {name:'Bench press',scheme:'2×3',kg:kgStr(r25(BASE_RM.bench*.6)),pct:'60%'},
+      H.acc('Overhead press','3×8 @ RPE 7'),H.acc('Weighted dips or incline DB press','3×10'),H.acc('Lat pulldown or barbell row','3×10'),H.acc('Triceps pushdown','3×12')]});
+    add(1,{sport:'run',title:'Strides',dur:15,steps:['10 min easy jog','4–6 × 20 s relaxed strides, walk back to recover','No hard running today']});
+    add(2,{sport:'run',title:'Easy run or rest',dur:20,target:H.run('E'),steps:['15–20 min easy, or take full rest if legs feel heavy']});
+    add(2,{sport:'swim',title:'First swim: drills only',dur:30,optional:true,steps:['Easy laps with rests as needed, 5 min','Kick on your side with a board or fin, 4 × 25 m','Catch-up drill, 4 × 25 m','Easy freestyle, 4 × 25 m, rest 30 s','Stop well before you feel tired']});
+    add(3,{sport:'gym',title:'Lower B: deadlift, legs kept fresh',dur:30,src:'Your program, week 12, with leg accessories removed',lifts:[
+      {name:'Deadlift',scheme:'2×3',kg:kgStr(r25(BASE_RM.deadlift*.6)),pct:'60%'},H.acc('Ab wheel or cable crunch','3×12')],
+      note:'Front squat, hip thrust and back extensions are left out this week so your legs are fresh on Saturday.'});
+    add(4,{sport:'gym',title:'Upper B: pull and hypertrophy',dur:50,src:'From your 12-week program, week 12',lifts:[
+      H.acc('Close-grip or incline bench','4×8 @ RPE 7–8'),H.acc('Weighted pull-ups or lat pulldown','4×8'),H.acc('Seated cable row or barbell row','3×10'),H.acc('DB shoulder press','3×10'),H.acc('DB curl + triceps pushdown superset','3×12')]});
+    add(5,{sport:'race',title:'5K PB attempt',dur:45,target:'Goal 22:00 (4:24/km) from your program',steps:['10–15 min easy jog, then 4 strides','5K all-out','10 min easy jog to cool down'],note:'Afterwards, enter your new 5K time under Your numbers. Every run pace in the plan updates from it.'});
+    add(6,{sport:'bike',title:'Easy spin',dur:30,optional:true,target:H.bike('Z1'),steps:['30 min very easy, legs just turning over']});
+    return d;
+  }
+
+  if(w===2){
+    const t=(i,lk,name)=>add(i,{sport:'test',title:name+' 1RM test',dur:50,lifts:testRows(H,lk,S.rm),
+      note:'Rest 3–5 min between attempts. Use safety bars or a spotter. Attempts come from the max under Your numbers, so set it to your best current estimate before testing. If attempt 2 moves fast, you can go heavier on attempt 3. Enter your new max afterwards.'});
+    t(0,'squat','Squat');
+    add(1,{sport:'swim',title:'Easy swim',dur:30,steps:['Easy freestyle with rests as needed','Mix in 4–6 × 25 m catch-up drill','Keep it relaxed; this is about getting comfortable']});
+    add(1,{sport:'run',title:'Easy run',dur:30,target:H.run('E'),steps:['30 min easy, conversational']});
+    t(2,'bench','Bench');
+    add(3,{sport:'bike',title:'Easy ride',dur:45,target:H.bike('Z2'),steps:['45 min easy','Get used to the bike: gears, braking, drinking while riding']});
+    add(3,{sport:'gym',title:'Upper accessories',dur:30,lifts:[H.acc('Overhead press','3×8 @ RPE 7'),H.acc('Seated cable row','3×10'),H.acc('Face pull','2×15')]});
+    t(4,'deadlift','Deadlift');
+    add(5,{sport:'bike',title:'Easy ride',dur:60,target:H.bike('Z2'),steps:['60 min steady, flat route if possible']});
+    add(6,{sport:'rest',title:'Rest day',dur:0,steps:['Gym closed. Full rest.']});
+    return d;
+  }
+
+  if(w===26){
+    add(0,{sport:'swim',title:'Race-week swim',dur:35,target:H.swimAer(),steps:['400 m easy','6 × 100 m aerobic, last 2 slightly quicker, 20 s rest','300 m easy']});
+    add(0,{sport:'gym',title:'Light full body',dur:30,lifts:[H.lift('Back squat',[2,3,60],'squat'),H.lift('Bench press',[3,3,70],'bench'),H.acc('Barbell row','2×8')]});
+    add(1,{sport:'bike',title:'Openers',dur:40,target:H.bike('Z2'),steps:['20 min easy','3 × 2 min at Ironman effort (top of Z2), 2 min easy','8 min easy']});
+    add(2,{sport:'run',title:'Shake-out run',dur:25,target:H.run('E'),steps:['20 min easy','4 × 20 s relaxed strides']});
+    add(2,{sport:'gym',title:'Upper body only',dur:25,lifts:[H.lift('Bench press',[2,3,65],'bench'),H.acc('Seated cable row','2×10')]});
+    add(3,{sport:'swim',title:'Easy swim',dur:25,target:H.swimAer(),steps:['1000 m easy, in open water with your wetsuit if possible']});
+    add(4,{sport:'gym',title:'Light upper body',dur:20,lifts:[H.lift('Bench press',[2,3,60],'bench'),H.acc('Face pull','2×15')],note:'Read the athlete guide: cutoffs, transition rules, check-in times.'});
+    add(5,{sport:'bike',title:'Bike check and shake-out',dur:30,target:H.bike('Z1'),steps:['20 min easy ride, run through the gears','10 min easy jog','Rack your bike at check-in']});
+    add(6,{sport:'race',title:'IRONMAN race day',dur:0,steps:[
+      'Swim 3.8 km: steady and aerobic. Cutoff is usually 2:20 from your start',
+      'Bike 180 km: stay in '+H.bike('Z2')+' or easier, the effort of your long rides. Fuel as you practised',
+      'Run 42.2 km: '+H.run('E')+' or slower. Planned walk breaks are fine',
+      'Finish inside the 17-hour limit'],note:'Confirm the exact cutoffs in your race’s athlete guide.'});
+    return d;
+  }
+
+  // ---------- weeks 3–25 ----------
+  const [sA,sB,sC,bT,offR,rS,brk,rT,rSun] = P[w];
+  const g = G[w], ph = phaseOf(w).id;
+  const accSets = (rec||ph==='peak'||ph==='taper') ? 2 : 3;
+  const gymDur = rec ? 35 : (ph==='peak'||ph==='taper') ? 35 : (ph==='build' ? 40 : 45);
+
+  // Swim A (Mon)
+  if([5,13,20].includes(w)){
+    add(0,{sport:'swim',title:'CSS swim test',dur:H.swimMin(sA),steps:['400 m easy, then 4 × 50 m building speed','400 m time trial, all out but evenly paced. Record the time','10 min easy swimming or rest','200 m time trial, all out. Record the time','300 m easy'],
+      note:'CSS pace per 100 m = (400 m time − 200 m time) ÷ 2. Enter it under Your numbers and every swim pace updates.'});
+  } else {
+    const drills = sA>=1500?8:6, wu=200, cd=100; const reps=Math.max(2,Math.round((sA-wu-drills*50-cd)/100)); const tot=wu+drills*50+reps*100+cd;
+    add(0,{sport:'swim',title:'Technique swim',dist:tot,dur:H.swimMin(tot),target:H.swimAer(),steps:[wu+' m easy, mixed strokes',drills+' × 50 m drill (catch-up, fingertip drag, 6-kick switch), 20 s rest',reps+' × 100 m aerobic, 20 s rest',cd+' m easy']});
+  }
+  // Swim B (Wed)
+  if(w===21){
+    add(2,{sport:'swim',title:'Race-distance swim',dist:3800,dur:H.swimMin(3800),target:H.swimAer(),steps:['200 m easy','3400 m continuous at steady aerobic effort','200 m easy'],note:'This covers the full 3.8 km. Swim in open water with your wetsuit if you can, with a buddy and a tow float.'});
+  } else {
+    const wu=sB<=1200?200:300, cd=100; let len,rest;
+    if(w<=6){len=100;rest='20 s';} else if(w<=10){len=200;rest='30 s';} else if(w<=14){len=400;rest='40 s';} else {len=500;rest='45 s';}
+    const n=Math.max(2,Math.round((sB-wu-cd)/len)); const tot=wu+cd+n*len;
+    const s={sport:'swim',title:'Endurance swim',dist:tot,dur:H.swimMin(tot),target:H.swimAer(),steps:[wu+' m easy',n+' × '+len+' m steady aerobic, '+rest+' rest',cd+' m easy']};
+    if(w>=15) s.note='Swim this one in open water when you can, with a buddy and a tow float.';
+    add(2,s);
+  }
+  // Swim C (Thu)
+  if(sC>0){
+    const wu=300,cd=100,n=Math.max(4,Math.round((sC-wu-cd)/100)),tot=wu+cd+n*100, early=w<5;
+    add(3,{sport:'swim',title: early?'Easy extra swim':'Threshold swim',optional:w<=5,dist:tot,dur:H.swimMin(tot),target: early?H.swimAer():H.swimThr(),
+      steps:[wu+' m easy', early? n+' × 100 m relaxed, 30 s rest (50s are fine)' : n+' × 100 m at CSS, 15 s rest', cd+' m easy'],
+      note: w<=5 ? 'Optional until the CSS test in week 5.' : ''});
+  }
+
+  // Bike Tue
+  const BT = {
+    3:['Easy ride with cadence drills',['10 min easy','5 × 1 min high cadence (95–105 rpm), 2 min easy between','Easy to finish'],'Z2'],
+    4:['Easy ride with cadence drills',['10 min easy','6 × 1 min high cadence (95–105 rpm), 2 min easy between','Easy to finish'],'Z2'],
+    5:['Steady ride',['15 min easy','3 × 5 min '+H.bike('Z3')+', 3 min easy','Easy to finish'],'Z2'],
+    6:['Easy ride',['40 min easy and steady'],'Z1'],
+    7:['Bike threshold test',['15 min easy with 3 short pick-ups','30 min solo time trial, as hard as you can hold evenly. Press lap at 10 min','15 min easy'],null,'Your bike LTHR = average heart rate for the last 20 minutes. Enter it under Your numbers.'],
+    8:['Tempo intervals',['15 min easy','3 × 8 min '+H.bike('Z3')+', 4 min easy','Easy to finish'],'Z2'],
+    9:['Tempo intervals',['15 min easy','3 × 10 min '+H.bike('Z3')+', 4 min easy','Easy to finish'],'Z2'],
+    10:['Easy ride',['45 min steady'],'Z2'],
+    11:['Tempo intervals',['15 min easy','3 × 12 min '+H.bike('Z3')+', 4 min easy','Easy to finish'],'Z2'],
+    12:['Tempo intervals',['15 min easy','2 × 15 min '+H.bike('Z3')+', 5 min easy','Easy to finish'],'Z2'],
+    13:['Tempo intervals',['15 min easy','2 × 20 min '+H.bike('Z3')+', 5 min easy','Easy to finish'],'Z2'],
+    14:['Easy ride',['50 min steady','4 × 1 min high cadence along the way'],'Z2'],
+    15:['Threshold intervals',['15 min easy','4 × 8 min '+H.bike('Z4')+', 4 min easy','Easy to finish'],'Z2'],
+    16:['Threshold intervals',['15 min easy','3 × 10 min '+H.bike('Z4')+', 5 min easy','Easy to finish'],'Z2'],
+    17:['Mixed intervals',['15 min easy','2 × 20 min '+H.bike('Z3')+', 5 min easy','2 × 5 min '+H.bike('Z4')+', 3 min easy'],'Z2'],
+    18:['Easy ride',['50 min steady'],'Z2'],
+    19:['Tempo intervals',['15 min easy','3 × 15 min '+H.bike('Z3')+', 5 min easy','Easy to finish'],'Z2'],
+    20:['Tempo intervals',['15 min easy','2 × 25 min '+H.bike('Z3')+', 5 min easy','Easy to finish'],'Z2'],
+    21:['Tempo intervals',['10 min easy','3 × 20 min '+H.bike('Z3')+', 5 min easy'],'Z2'],
+    22:['Easy ride',['50 min steady'],'Z2'],
+    23:['Tempo intervals',['15 min easy','3 × 15 min '+H.bike('Z3')+', 5 min easy','Easy to finish'],'Z2'],
+    24:['Tempo intervals',['15 min easy','2 × 15 min '+H.bike('Z3')+', 5 min easy','Easy to finish'],'Z2'],
+    25:['Short tempo',['15 min easy','3 × 8 min '+H.bike('Z3')+', 4 min easy','Easy to finish'],'Z2']
+  }[w];
+  add(1,{sport:'bike',title:BT[0],dur:bT,target:BT[2]?'Base effort '+H.bike(BT[2]):'',steps:BT[1],note:BT[3]||''});
+  if(offR>0) add(1,{sport:'run',title:'Run off the bike',dur:offR,target:H.run('E'),steps:[offR+' min easy, straight after the ride']});
+
+  // Run Thu
+  const T=(n,m,rest)=>['15 min easy ('+H.run('E')+')', n+' × '+m+' min at '+H.run('T')+', '+rest+' easy jog','10 min easy'];
+  const Mr=(m)=>['15 min easy',m+' min at '+H.run('M'),'10 min easy'];
+  const easyStr=(m)=>[m+' min at '+H.run('E'),'Finish with 6 × 20 s relaxed strides'];
+  const RT = {
+    3:['Run threshold test',['15 min easy with 3 strides','30 min solo time trial, as hard as you can hold evenly. Press lap at 10 min','10 min easy'],'Your run LTHR = average heart rate for the last 20 minutes. Enter it under Your numbers.'],
+    4:['Threshold intervals',T(4,5,'2 min')],5:['Threshold intervals',T(3,8,'2 min')],6:['Easy run with strides',easyStr(40)],
+    7:['Threshold intervals',T(3,10,'2 min')],8:['Threshold intervals',T(2,15,'3 min')],9:['Threshold intervals',T(4,8,'2 min')],10:['Easy run with strides',easyStr(40)],
+    11:['Steady run',Mr(40)],12:['Threshold intervals',T(3,12,'3 min')],13:['Steady run',Mr(45)],14:['Easy run with strides',easyStr(40)],
+    15:['Threshold intervals',T(3,12,'3 min')],16:['Steady run',Mr(45)],17:['Threshold intervals',T(4,10,'2 min')],18:['Easy run with strides',easyStr(45)],
+    19:['Steady run',Mr(45)],20:['Threshold intervals',T(3,15,'3 min')],21:['Steady run',Mr(45)],22:['Easy run with strides',easyStr(45)],
+    23:['Steady run',Mr(45)],24:['Threshold intervals',T(3,10,'2 min')],25:['Short threshold',['10 min easy','3 × 6 min at '+H.run('T')+', 2 min easy jog','10 min easy']]
+  }[w];
+  add(3,{sport:'run',title:RT[0],dur:rT,steps:RT[1],note:RT[2]||''});
+
+  // Sat long ride + brick
+  const rideNote = ph==='foundation' ? 'Practise gears, cornering and drinking while riding.'
+    : ph==='base' ? 'Eat and drink every 20–30 min to practise fuelling.'
+    : w===24 ? 'Race rehearsal: use your race bike setup, clothing and nutrition.'
+    : 'Practise your race-day nutrition. Keep the last hour at the top of Z2.';
+  add(5,{sport:'bike',title: w===24?'Race simulation ride':'Long ride',dur:rS,target:H.bike('Z2'),steps:[Math.floor(rS/60)+' h '+(rS%60? (rS%60)+' min ':'')+'steady'],note:rideNote});
+  if(brk>0) add(5,{sport:'run',title:'Brick run',dur:brk,target:H.run('E'),steps:[brk+' min straight off the bike','Quick, short steps for the first few minutes']});
+
+  // Sun long run
+  const mFinish=[17,19,21].includes(w);
+  add(6,{sport:'run',title:'Long run',dur:rSun,target:H.run('E'),steps: mFinish ? [(rSun-20)+' min easy','Last 20 min at '+H.run('M')] : [rSun+' min easy, conversational']});
+
+  // Gym
+  if(g.test){
+    const t=(i,lk,name)=>add(i,{sport:'test',title:name+' 1RM retest',dur:50,lifts:testRows(H,lk,S.rm),note:'Openers come from the maxes under Your numbers. Enter your new max afterwards.'});
+    t(0,'squat','Squat'); t(2,'deadlift','Deadlift'); t(4,'bench','Bench');
+  } else {
+    const a=(n,s)=>H.acc(n,accSets+s);
+    add(0,{sport:'gym',title:'Gym A: squat',dur:gymDur,lifts:[H.lift('Back squat',g.sq,'squat'),H.lift('Bench press (volume)',g.bv,'bench'),a('Barbell row','×8 @ RPE 7'),a('Plank','×45 s')].filter(Boolean)});
+    add(2,{sport:'gym',title:'Gym B: deadlift',dur:gymDur,lifts:[H.lift('Deadlift',g.dl,'deadlift'),H.lift('Bench press (paused, light)',g.bl,'bench'),a('Pull-ups or lat pulldown','×6–8'),a('Standing calf raise','×12'),a('Hanging leg raise','×10')].filter(Boolean)});
+    if(g.benchTest){
+      add(4,{sport:'test',title:'Bench 1RM retest',dur:50,lifts:testRows(H,'bench',S.rm),note:'Upper body only, so your legs stay fresh for the weekend.'});
+    } else {
+      add(4,{sport:'gym',title:'Gym C: bench',dur:gymDur,lifts:[H.lift('Bench press',g.bh,'bench'),H.lift('Back squat (light)',g.sl,'squat'),a('Overhead press','×8 @ RPE 7'),a('Seated cable row','×10'),H.acc('Face pull','2×15')].filter(Boolean)});
+    }
+  }
+  return d;
+}
+
+function weekTotals(days){
+  const t={swim:0,bike:0,run:0,gym:0}; 
+  days.flat().forEach(s=>{ if(s.optional) return; const k = s.sport==='test'?'gym': s.sport==='race'?null:s.sport; if(k && t[k]!==undefined) t[k]+=s.dur||0; });
+  t.total=t.swim+t.bike+t.run+t.gym; return t;
+}
+// ===== App =====
+const KEY='ironman-plan-v1';
+const DEF={rm:{bench:130,squat:152,deadlift:187},fiveK:1500,lthrRun:null,lthrBike:null,css:null,checks:{}};
+let S=JSON.parse(JSON.stringify(DEF));
+let dbRef=null, writeChain=Promise.resolve(), saveTimer=null;
+
+function merge(src){ if(!src) return; if(src.rm) S.rm={...S.rm,...src.rm}; ['fiveK','lthrRun','lthrBike','css'].forEach(k=>{ if(k in src) S[k]=src[k]; }); if(src.checks){ S.checks={}; for(const [k,v] of Object.entries(src.checks)){ if(v===true||v==='done') S.checks[k]='done'; else if(v==='missed') S.checks[k]='missed'; } } }
+try{ const raw=localStorage.getItem(KEY); if(raw) merge(JSON.parse(raw)); }catch(e){}
+
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    const snap={rm:S.rm,fiveK:S.fiveK,lthrRun:S.lthrRun,lthrBike:S.lthrBike,css:S.css,checks:S.checks};
+    try{ localStorage.setItem(KEY,JSON.stringify(snap)); }catch(e){}
+    if(dbRef){ writeChain=writeChain.then(()=>dbRef.set(snap)).then(()=>setSave('Saved to your account.')).catch(()=>setSave('Couldn’t save to your account. Changes are kept on this device.')); }
+  },600);
+}
+function setSave(t){ const el=document.getElementById('savestate'); if(el) el.textContent=t; }
+
+async function connectDb(){
+  try{
+    if(!window.claude||!window.claude.use) return;
+    const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+    if(!db||!user) return;
+    const uid=await user.id(); if(!uid) return;
+    dbRef=db.doc('data/users/'+uid+'/plan');
+    const snap=await dbRef.get();
+    if(snap.exists){ merge(snap.data()); fillInputs(); renderAll(); }
+    else persist();
+    setSave('Saved to your account, so it follows you across devices.');
+  }catch(e){ dbRef=null; }
+}
+
+// ---------- dates ----------
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function dayDate(w,i){ const d=new Date(START); d.setDate(d.getDate()+(w-1)*7+i); return d; }
+function dstr(d){ return d.getDate()+' '+MON[d.getMonth()]; }
+function todayWeek(){ const t=new Date(); t.setHours(0,0,0,0); const diff=Math.floor((t-START)/86400000); if(diff<0) return 1; return Math.min(26,Math.floor(diff/7)+1); }
+function inPlanWeek(){ const t=new Date(); t.setHours(0,0,0,0); const diff=Math.floor((t-START)/86400000); return (diff<0||diff>=182)?null:Math.floor(diff/7)+1; }
+function daysToRace(){ const t=new Date(); t.setHours(0,0,0,0); return Math.round((RACE-t)/86400000); }
+
+// ---------- rendering ----------
+let viewW=todayWeek();
+const SPORT={swim:'Swim',bike:'Bike',run:'Run',gym:'Gym',test:'Strength test',race:'Race',rest:'Rest'};
+const WEEKNOTE={
+  1:'Taper week for your 5K PB attempt. Strength and running follow week 12 of your current program. One optional swim and spin get you started.',
+  2:'Test your 1RMs on fresh legs, spread across three days. Endurance stays easy and light.',
+  3:'Ironman training starts. Run threshold test on Thursday sets your heart-rate zones.',
+  5:'CSS swim test on Monday sets your swim paces.',
+  6:'Recovery week: lighter everything so the last three weeks sink in.',
+  7:'Bike threshold test on Tuesday sets your bike heart-rate zones.',
+  10:'Recovery week, timed for Christmas.',
+  13:'CSS retest on Monday. Heaviest strength week of the season.',
+  14:'Recovery week for endurance, and a 1RM retest for all three lifts. Update your maxes afterwards.',
+  15:'Build phase. Squat and deadlift switch to holding strength; bench keeps progressing. Brick runs get longer.',
+  18:'Recovery week.',
+  20:'CSS retest on Monday.',
+  21:'Biggest swim of the season: the full 3.8 km.',
+  22:'Recovery week with an optional bench retest on Friday.',
+  23:'Peak week: your longest ride of the season.',
+  24:'Race rehearsal on Saturday: race gear, race nutrition, race effort.',
+  25:'Taper: volume drops sharply, short efforts keep you sharp.',
+  26:'Race week. Rest, check your gear, and trust the work.'
+};
+function h(t){ const e=document.createElement('div'); e.textContent=t; return e.innerHTML; }
+
+function renderProfile(){
+  const bars=document.getElementById('bars'), wk=document.getElementById('wkno'), phs=document.getElementById('phases');
+  const tot=[]; for(let w=1;w<=26;w++) tot.push(weekTotals(buildWeek(w,S)));
+  const max=Math.max(...tot.map(t=>t.total));
+  const now=inPlanWeek();
+  bars.innerHTML=''; wk.innerHTML=''; phs.innerHTML='';
+  tot.forEach((t,i)=>{
+    const w=i+1;
+    const lg=weekLog(w);
+    const b=document.createElement('button'); b.type='button'; b.className='bar'+(w===viewW?' sel':'')+(w===now?' now':'')+(lg.complete?' done':'');
+    b.setAttribute('role','option'); b.setAttribute('aria-selected',w===viewW); b.setAttribute('aria-label','Week '+w+', '+(t.total/60).toFixed(1)+' hours planned'+(lg.missed?', '+lg.missed+' missed':'')+(lg.complete?', fully logged':''));
+    const st=document.createElement('span'); st.className='stack'; st.style.height=(t.total/max*100)+'%';
+    const seg=(k,min,cls)=>{ const s=document.createElement('span'); s.className='seg'+(cls?' '+cls:''); s.style.backgroundColor='var(--'+k+')'; s.style.flex=min+' 0 0'; st.appendChild(s); };
+    ['gym','run','bike','swim'].forEach(k=>{ if(!t[k]) return; const miss=Math.min(t[k],lg.missedMin[k]); if(t[k]-miss>0) seg(k,t[k]-miss); if(miss>0) seg(k,miss,'missed'); });
+    st.style.display='flex'; b.appendChild(st);
+    b.onclick=()=>{ viewW=w; renderAll(); document.getElementById('wkTitle').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}); };
+    bars.appendChild(b);
+    const n=document.createElement('span'); n.textContent=w; wk.appendChild(n);
+  });
+  const spans=[[1,1,'5K'],[2,2,'Test'],[3,6,'Foundation'],[7,14,'Base'],[15,22,'Build'],[23,24,'Peak'],[25,26,'Taper']];
+  spans.forEach(([a,z,l])=>{ const p=document.createElement('span'); p.className='ph'; p.style.gridColumn=a+' / '+(z+1); p.textContent=l; p.title=l; phs.appendChild(p); });
+}
+
+function weekLog(w){
+  const days=buildWeek(w,S); const r={n:0,done:0,missed:0,missedMin:{swim:0,bike:0,run:0,gym:0}};
+  days.forEach((ss,di)=>ss.forEach((s,si)=>{
+    if(s.optional||s.sport==='rest') return;
+    const st=S.checks[w+'-'+di+'-'+si]; r.n++;
+    if(st==='done') r.done++;
+    if(st==='missed'){ r.missed++; const k=s.sport==='test'?'gym':s.sport; if(k in r.missedMin) r.missedMin[k]+=s.dur||0; }
+  }));
+  r.missedTotal=Object.values(r.missedMin).reduce((a,b)=>a+b,0);
+  r.complete=r.n>0 && r.done+r.missed===r.n; return r;
+}
+
+function fmtH(m){ if(!m) return '0 h'; const hh=Math.floor(m/60), mm=m%60; return hh? hh+' h'+(mm?' '+mm:''): mm+' min'; }
+
+function renderWeek(){
+  const w=viewW, days=buildWeek(w,S), t=weekTotals(days), ph=phaseOf(w);
+  document.getElementById('wkTitle').textContent='Week '+w;
+  document.getElementById('wkDates').textContent=dstr(dayDate(w,0))+' to '+dstr(dayDate(w,6))+(w===inPlanWeek()?' (this week)':'');
+  document.getElementById('wkPhase').textContent=ph.name+(REC.has(w)?', recovery':'');
+  document.getElementById('prev').disabled=w===1; document.getElementById('next').disabled=w===26;
+  const swimM=days.flat().filter(s=>s.sport==='swim'&&!s.optional).reduce((a,s)=>a+(s.dist||0),0);
+  document.getElementById('totals').innerHTML=
+    '<div class="tot"><b>'+fmtH(t.total)+'</b><span>Planned total</span></div>'+
+    ['swim','bike','run','gym'].map(k=>'<div class="tot"><b>'+fmtH(t[k])+(k==='swim'&&swimM?' <small style="font-size:15px;color:var(--muted)">('+(swimM/1000).toFixed(1)+' km)</small>':'')+'</b><span><i class="sw" style="background:var(--'+k+')"></i>'+SPORT[k]+'</span></div>').join('');
+  document.getElementById('weeknote').textContent=WEEKNOTE[w]||'';
+  const lg=weekLog(w);
+  document.getElementById('logline').textContent=lg.done+' of '+lg.n+' sessions done'+(lg.missed?', '+lg.missed+' missed ('+fmtH(lg.missedTotal)+')':'')+'. Use the tick for done and the cross for missed; tap again to clear.';
+  const box=document.getElementById('days'); box.innerHTML='';
+  days.forEach((ss,di)=>{
+    const row=document.createElement('div'); row.className='day';
+    row.innerHTML='<div class="dayname"><b>'+DAYS[di]+'</b><span>'+dstr(dayDate(w,di))+'</span></div>';
+    const wrap=document.createElement('div'); wrap.className='sessions';
+    if(!ss.length){ ss=[{sport:'rest',title:'Rest',dur:0,steps:[]}]; }
+    ss.forEach((s,si)=>{
+      const k=w+'-'+di+'-'+si, st=S.checks[k]||'';
+      const el=document.createElement('article'); el.className='s'+(s.optional?' optional':'')+(st==='done'?' isdone':st==='missed'?' ismissed':''); el.style.setProperty('--c','var(--'+s.sport+')');
+      let html='<div class="s-top">';
+      if(s.sport!=='rest') html+='<div class="marks">'
+        +'<button type="button" class="mk done'+(st==='done'?' on':'')+'" data-k="'+k+'" data-v="done" aria-pressed="'+(st==='done')+'" aria-label="Mark '+h(s.title)+' done" title="Done"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg></button>'
+        +'<button type="button" class="mk miss'+(st==='missed'?' on':'')+'" data-k="'+k+'" data-v="missed" aria-pressed="'+(st==='missed')+'" aria-label="Mark '+h(s.title)+' missed" title="Missed"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>'
+        +'</div>';
+      html+='<div class="s-title"><div class="s-kind">'+SPORT[s.sport]+(s.optional?'<span class="opt">Optional</span>':'')+'</div><h4>'+h(s.title)+'</h4></div>';
+      if(s.dur) html+='<div class="s-dur">'+(s.dist? (s.dist/1000).toFixed(1)+' km':fmtH(s.dur))+'</div>';
+      html+='</div>';
+      if(st==='missed') html+='<p class="status">Missed</p>';
+      if(s.target) html+='<p class="target">'+h(s.target)+'</p>';
+      if(s.lifts) html+='<table class="lifts"><tbody>'+s.lifts.map(l=>'<tr><td class="n">'+h(l.name)+'</td><td>'+h(l.scheme)+'</td><td class="k">'+h(l.kg)+'</td><td class="p">'+h(l.pct)+'</td></tr>').join('')+'</tbody></table>';
+      if(s.steps&&s.steps.length) html+='<ol class="steps">'+s.steps.map(x=>'<li>'+h(x)+'</li>').join('')+'</ol>';
+      if(s.dist) html+='<p class="note">About '+fmtH(s.dur)+(S.css?'':' at a beginner pace')+'.</p>';
+      if(s.note) html+='<p class="note">'+h(s.note)+'</p>';
+      if(s.src) html+='<p class="src">'+h(s.src)+'</p>';
+      el.innerHTML=html; wrap.appendChild(el);
+    });
+    row.appendChild(wrap); box.appendChild(row);
+  });
+}
+
+function renderRef(){
+  const rp=runPaces(S.fiveK), L=S.lthrRun;
+  document.getElementById('vdotLine').textContent='From your 5K of '+mmss(S.fiveK)+', your VDOT (Daniels and Gilbert’s performance score) is '+rp.vdot.toFixed(1)+'. Paces use Daniels’ intensities as a share of that score. Easy pace shown is the upper part of his 59–74% easy range.';
+  const hr=(a,b)=>L? (a? Math.round(L*a)+'–':'under ')+Math.round(L*b)+' bpm':'Test in week 3';
+  const rows=[['E: easy and long runs','65–74%',rp.E,hr(0,.89),'Most of your running'],['M: steady','75–84%',rp.M,hr(.90,.94),'Steady runs, long-run finishes'],['T: threshold','83–88%',rp.T,hr(.95,1.02),'Comfortably hard intervals'],['I: interval','95–100%',rp.I,'—','Not used in this plan']];
+  document.getElementById('runZones').innerHTML='<thead><tr><th>Zone</th><th>% of VDOT</th><th>Pace</th><th>Heart rate (approx.)</th><th>Used for</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+mmss(r[2][0])+'–'+mmss(r[2][1])+'/km</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>').join('')+'</tbody>';
+  const B=S.lthrBike;
+  const z=[['Z1','<85%','<81%'],['Z2','85–89%','81–89%'],['Z3','90–94%','90–93%'],['Z4','95–99%','94–99%'],['Z5a','100–102%','100–102%']];
+  const bpm=(L,str)=>{ if(!L) return '—'; const m=str.match(/[\d.]+/g).map(Number); return str.startsWith('<')? 'under '+Math.round(L*m[0]/100) : Math.round(L*m[0]/100)+'–'+Math.round(L*m[1]/100); };
+  document.getElementById('hrZones').innerHTML='<thead><tr><th>Zone</th><th>Run % LTHR</th><th>Run bpm</th><th>Bike % LTHR</th><th>Bike bpm</th></tr></thead><tbody>'+z.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+bpm(S.lthrRun,r[1])+'</td><td>'+r[2]+'</td><td>'+bpm(S.lthrBike,r[2])+'</td></tr>').join('')+'</tbody>';
+  document.getElementById('swimLine').textContent= S.css ? 'Your CSS is '+mmss(S.css)+'/100 m: aerobic '+mmss(S.css+8)+'–'+mmss(S.css+15)+', threshold repeats '+mmss(S.css+1)+'–'+mmss(S.css+2)+' per 100 m.' : 'No CSS yet. Swim paces appear after your week 5 test.';
+}
+
+function renderLede(){
+  const n=daysToRace();
+  document.getElementById('lede').innerHTML='Swim 3.8 km, bike 180 km, run 42.2 km. Race day is <b>Sunday 18 April 2027</b>'+(n>0?', '+n+' days from today.':n===0?'. That’s today.':'.');
+}
+function renderAll(){ renderLede(); renderProfile(); renderWeek(); renderRef(); }
+
+// ---------- inputs ----------
+function fillInputs(){
+  document.getElementById('inBench').value=S.rm.bench; document.getElementById('inSquat').value=S.rm.squat; document.getElementById('inDead').value=S.rm.deadlift;
+  document.getElementById('in5k').value=mmss(S.fiveK); document.getElementById('inLR').value=S.lthrRun||''; document.getElementById('inLB').value=S.lthrBike||''; document.getElementById('inCSS').value=S.css?mmss(S.css):'';
+}
+function bindNum(id,fn){ document.getElementById(id).addEventListener('change',e=>{ const v=parseFloat(e.target.value); if(fn(isFinite(v)?v:null)!==false){ renderAll(); persist(); } else fillInputs(); }); }
+bindNum('inBench',v=>{ if(!v||v<20) return false; S.rm.bench=v; });
+bindNum('inSquat',v=>{ if(!v||v<20) return false; S.rm.squat=v; });
+bindNum('inDead',v=>{ if(!v||v<20) return false; S.rm.deadlift=v; });
+bindNum('inLR',v=>{ if(v!==null&&(v<100||v>220)) return false; S.lthrRun=v; });
+bindNum('inLB',v=>{ if(v!==null&&(v<100||v>220)) return false; S.lthrBike=v; });
+document.getElementById('in5k').addEventListener('change',e=>{ const s=parseMMSS(e.target.value); if(s&&s>=600&&s<=3600){ S.fiveK=s; renderAll(); persist(); } else fillInputs(); });
+document.getElementById('inCSS').addEventListener('change',e=>{ const v=e.target.value.trim(); if(!v){ S.css=null; renderAll(); persist(); return; } const s=parseMMSS(v); if(s&&s>=50&&s<=300){ S.css=s; renderAll(); persist(); } else fillInputs(); });
+document.getElementById('days').addEventListener('click',e=>{
+  const btn=e.target.closest('.mk'); if(!btn) return;
+  const k=btn.dataset.k, v=btn.dataset.v;
+  if(S.checks[k]===v) delete S.checks[k]; else S.checks[k]=v;
+  const y=window.scrollY; renderProfile(); renderWeek(); window.scrollTo(0,y);
+  const again=document.querySelector('.mk[data-k="'+k+'"][data-v="'+v+'"]'); if(again) again.focus({preventScroll:true});
+  persist();
+});
+document.getElementById('prev').onclick=()=>{ if(viewW>1){ viewW--; renderAll(); } };
+document.getElementById('next').onclick=()=>{ if(viewW<26){ viewW++; renderAll(); } };
+
+fillInputs(); renderAll(); connectDb();
+// ---------- backup / restore ----------
+document.getElementById('btnBackup').onclick=()=>{
+  const data=JSON.stringify({app:'ironman-plan',version:1,saved:new Date().toISOString(),state:{rm:S.rm,fiveK:S.fiveK,lthrRun:S.lthrRun,lthrBike:S.lthrBike,css:S.css,checks:S.checks}},null,1);
+  const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+  const a=document.createElement('a'); a.href=url; a.download='ironman-plan-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),2000);
+  document.getElementById('backupMsg').textContent='Backup file created. Keep it somewhere safe, like your cloud drive.';
+};
+document.getElementById('btnRestore').onclick=()=>document.getElementById('fileRestore').click();
+document.getElementById('fileRestore').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const j=JSON.parse(r.result); if(j.app!=='ironman-plan'||!j.state) throw 0; merge(j.state); fillInputs(); renderAll(); persist(); document.getElementById('backupMsg').textContent='Restored from the backup saved '+String(j.saved||'').slice(0,10)+'.'; }catch(err){ document.getElementById('backupMsg').textContent='That file isn’t a backup from this app. Choose a file named ironman-plan-backup.'; } e.target.value=''; };
+  r.readAsText(f);
+});
+// ---------- offline app ----------
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){ window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{})); }
+</script></body></html>
