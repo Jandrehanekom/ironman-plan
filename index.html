@@ -440,7 +440,8 @@ function buildWeek(w, S){
   const [sA,sB,sC,bT,offR,rS,brk,rT,rSun] = P[w];
   const g = G[w], ph = phaseOf(w).id;
   const accSets = (rec||ph==='peak'||ph==='taper') ? 2 : 3;
-  const gymDur = rec ? 35 : (ph==='peak'||ph==='taper') ? 35 : (ph==='build' ? 40 : 45);
+  const gymDur = (rec||ph==='taper') ? 45 : 60;
+  const backoff = !rec && w<=13; // extra squat/deadlift volume only before the Build phase
 
   // Swim A (Mon)
   if([5,13,20].includes(w)){
@@ -531,12 +532,12 @@ function buildWeek(w, S){
     t(0,'squat','Squat'); t(2,'deadlift','Deadlift'); t(4,'bench','Bench');
   } else {
     const a=(n,s)=>H.acc(n,accSets+s);
-    add(0,{sport:'gym',title:'Gym A: squat',dur:gymDur,lifts:[H.lift('Back squat',g.sq,'squat'),H.lift('Bench press (volume)',g.bv,'bench'),a('Barbell row','×8 @ RPE 7'),a('Plank','×45 s')].filter(Boolean)});
-    add(2,{sport:'gym',title:'Gym B: deadlift',dur:gymDur,lifts:[H.lift('Deadlift',g.dl,'deadlift'),H.lift('Bench press (paused, light)',g.bl,'bench'),a('Pull-ups or lat pulldown','×6–8'),a('Standing calf raise','×12'),a('Hanging leg raise','×10')].filter(Boolean)});
+    add(0,{sport:'gym',title:'Gym A: squat',dur:gymDur,lifts:[H.lift('Back squat',g.sq,'squat'),backoff?H.lift('Back squat back-off',[2,5,g.sq[2]-10],'squat'):null,H.lift('Bench press (volume)',g.bv,'bench'),a('Barbell row','×8 @ RPE 7'),a('Leg curl','×10'),a('Plank','×45 s')].filter(Boolean)});
+    add(2,{sport:'gym',title:'Gym B: deadlift',dur:gymDur,lifts:[H.lift('Deadlift',g.dl,'deadlift'),backoff?H.lift('Deadlift back-off',[1,5,g.dl[2]-10],'deadlift'):null,H.lift('Bench press (paused, light)',g.bl,'bench'),a('Incline DB press','×10'),a('Pull-ups or lat pulldown','×6–8'),a('Standing calf raise','×12'),a('Hanging leg raise','×10')].filter(Boolean)});
     if(g.benchTest){
       add(4,{sport:'test',title:'Bench 1RM retest',dur:50,lifts:testRows(H,'bench',S.rm),note:'Upper body only, so your legs stay fresh for the weekend.'});
     } else {
-      add(4,{sport:'gym',title:'Gym C: bench',dur:gymDur,lifts:[H.lift('Bench press',g.bh,'bench'),H.lift('Back squat (light)',g.sl,'squat'),a('Overhead press','×8 @ RPE 7'),a('Seated cable row','×10'),H.acc('Face pull','2×15')].filter(Boolean)});
+      add(4,{sport:'gym',title:'Gym C: bench',dur:gymDur,lifts:[H.lift('Bench press',g.bh,'bench'),a('Close-grip bench press','×6 @ RPE 7'),H.lift('Back squat (light)',g.sl,'squat'),a('Overhead press','×8 @ RPE 7'),a('Seated cable row','×10'),a('Triceps pushdown','×12'),H.acc('Face pull','2×15')].filter(Boolean)});
     }
   }
   return d;
